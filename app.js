@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('./model/user');
+const auth = require('./middleware/auth');
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
@@ -67,12 +69,16 @@ app.post('/login', async (req, res) => {
       );
 
       user.token = token;
-      console.log('[LOGIN] Login Aprovado !');
+      console.log('[LOGIN] Login OK!');
       return res.status(200).json(user);
     }
   } catch {
     return res.status(400).send('Invalid Credentials !');
   }
+});
+
+app.post('/welcome', cors(), auth, (req, res) => {
+  res.status(200).send(' Welcome to Private Page 🏆');
 });
 
 module.exports = app;
